@@ -1,0 +1,154 @@
+
+package fr.utbm.info.carpooling.^agent
+
+import io.sarl.core.Logging
+import io.sarl.core.Initialize
+import io.sarl.core.Destroy
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Schedules
+import io.sarl.core.Lifecycle
+import io.sarl.util.Scopes
+
+event demand {
+	
+  val index : int
+  new(i : int) {
+    this.index = i
+  }
+}
+event request {
+  val index : int
+  new(i : int) {
+    this.index = i
+  }
+}
+
+agent RequestAgent {
+  uses DefaultContextInteractions,Logging
+  on demand {
+  	println("AgentRequest envoi"+ occurrence.index)
+    emit( 
+    	new request( occurrence.index ),
+    	Scopes.addresses( occurrence.source )
+    	
+    )
+  }
+}
+agent DemandAgent {
+  uses DefaultContextInteractions,Schedules
+  on request {
+  	println("AgentRequest envoi"+ occurrence.index)
+    emit(
+      new demand( occurrence.index + 1 ),
+      Scopes.addresses( occurrence.source )
+    )
+  }
+  on Initialize {
+  	val task = task("waiting_for_partner")
+    task.every(10) [
+      if (defaultSpace.participants.size > 1) 
+      {
+    	emit( new demand(1) )
+        task.cancel
+        }
+        
+      ]
+    }
+ }
+ agent BootAgent {
+  uses DefaultContextInteractions, Lifecycle
+  on Initialize {
+  	spawn( RequestAgent )
+    spawn( DemandAgent )
+    killMe
+  }
+}
+        
+
+
+
+/* 
+event MeTuer
+event Constructeur
+
+agent MyAgent {
+  uses Logging, Lifecycle, Schedules, DefaultContextInteractions
+  
+  uses DefaultContextInteractions
+  def doSomething {
+  	
+    var e = new Initialize
+    emit(e)  
+    }
+    
+    
+  on Initialize {
+  	println("Agent1")
+    println("MyAgent spawned")
+    println("My Parameters are :"
+      + occurrence.parameters.toString)
+      
+      
+      emit(new Constructeur)
+            
+      in(5000) [
+      	emit(new MeTuer)
+      ]
+      
+      
+  }
+  
+  on MeTuer {
+  	killMe
+  }
+  
+  on Destroy {
+    println("MyAgent destroyed")
+  }
+  on Constructeur{
+  	println("Appel Constructeur")  	
+  }
+  
+}
+
+
+agent MyAgent2 {
+  uses Logging, Lifecycle, Schedules, DefaultContextInteractions
+  
+  uses DefaultContextInteractions
+  def doSomething {
+  	
+    var e = new Initialize
+    emit(e)  
+    }
+    
+    
+  on Initialize {
+  	println("Agent2")
+    println("MyAgent spawned")
+    println("My Parameters are :"
+      + occurrence.parameters.toString)
+      
+      
+      emit(new Constructeur)
+            
+      in(5000) [
+      	emit(new MeTuer)
+      ]
+      
+      
+  }
+  
+  on MeTuer {
+  	killMe
+  }
+  
+  on Destroy {
+    println("MyAgent2 destroyed")
+  }
+  on Constructeur{
+  	println("Appel Constructeur 2")  	
+  }
+  
+}
+*/
