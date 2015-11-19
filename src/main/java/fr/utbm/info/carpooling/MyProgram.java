@@ -5,6 +5,7 @@ import fr.utbm.info.carpooling.agent.DemandAgent;
 import fr.utbm.info.carpooling.agent.RequestAgent;
 
 import io.janusproject.Boot;
+import io.janusproject.kernel.Kernel;
 import io.janusproject.util.LoggerCreator;
 import io.sarl.lang.core.Agent;
 
@@ -22,16 +23,11 @@ public class MyProgram {
             (Class<Module>) null,
             agentType,
             "abcde");*/
-        Class<? extends Agent> agentTypeRequest = RequestAgent.class;
-        Boot.startJanus(
+            
+        // FIXME: It is preferable to launch a BootAgent, and create the RequestAgent and DemandAgent inside the BootAgent (in SARL)
+        Class<? extends Agent> booter = BootAgent.class;
+        Kernel kernel = Boot.startJanus(
             (Class<Module>) null,
-            agentTypeRequest,
-            10);
-        
-        Class<? extends Agent> agentTypeDemand = DemandAgent.class;
-        Boot.startJanus(
-            (Class<Module>) null,
-            agentTypeDemand,
-            20);
+            booter);
     }
 }
