@@ -58,8 +58,8 @@ agent DemandAgent {
  agent BootAgent {
   uses DefaultContextInteractions, Lifecycle
   on Initialize {
-  	spawn( RequestAgent )
-    spawn( DemandAgent )
+  	spawn( RequestAgent, 10 )
+    spawn( DemandAgent, 20 )
     killMe
   }
 }
