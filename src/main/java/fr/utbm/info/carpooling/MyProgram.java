@@ -25,15 +25,9 @@ public class MyProgram {
             "abcde");*/
             
         // FIXME: It is preferable to launch a BootAgent, and create the RequestAgent and DemandAgent inside the BootAgent (in SARL)
-        Class<? extends Agent> agentTypeRequest = RequestAgent.class;
+        Class<? extends Agent> booter = BootAgent.class;
         Kernel kernel = Boot.startJanus(
             (Class<Module>) null,
-            agentTypeRequest,
-            10);
-        
-        Class<? extends Agent> agentTypeDemand = DemandAgent.class;
-        kernel.spawn(
-            agentTypeDemand,
-            20);
+            booter);
     }
 }
